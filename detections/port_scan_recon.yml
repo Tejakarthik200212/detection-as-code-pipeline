@@ -1,0 +1,28 @@
+title: Port Scan / Network Reconnaissance
+id: c3d0e5f2-3a7b-4c9d-8e2f-4a5b6c7d8e9f
+status: experimental
+description: >
+  Detects a single source connecting to many distinct ports on a host in a short
+  window, indicating port-scanning / reconnaissance activity.
+author: Tejakarthik Reddy Banka
+date: 2026/07/26
+references:
+  - https://attack.mitre.org/techniques/T1046/
+logsource:
+  product: linux
+  service: firewall
+detection:
+  selection:
+    action: 'blocked'
+  timeframe: 1m
+  condition: selection | count(dst_port) by src_ip >= 15
+fields:
+  - src_ip
+  - dst_port
+falsepositives:
+  - Vulnerability scanners run by the internal security team
+  - Load balancers or health-check systems probing multiple ports
+level: medium
+tags:
+  - attack.discovery
+  - attack.t1046

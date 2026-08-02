@@ -1,0 +1,18 @@
+# Secrets — never commit
+.env
+*.key
+*_secret*
+
+# Generated incident records
+response/incidents/
+incidents/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+
+# OS
+.DS_Store

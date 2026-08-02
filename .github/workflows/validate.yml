@@ -1,0 +1,38 @@
+name: Validate Detections
+
+# Runs automatically on every push and pull request. If any Sigma rule is
+# malformed or missing a MITRE ATT&CK mapping, the build fails — so broken
+# detections can never reach the main branch. This is the "as-code" guarantee.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate all detection rules
+        run: python -m pytest tests/ -v
+
+      - name: Confirm rules are syntactically valid YAML
+        run: |
+          for f in detections/*.yml; do
+            echo "Checking $f"
+            python -c "import yaml,sys; yaml.safe_load(open('$f'))"
+          done

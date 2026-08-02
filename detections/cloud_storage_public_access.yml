@@ -1,0 +1,32 @@
+title: Cloud Storage Container Made Publicly Accessible
+id: b2c9d4e1-2f6a-4b8c-9d1e-3f4a5b6c7d8e
+status: experimental
+description: >
+  Detects a cloud storage container or blob access level being changed to allow
+  public/anonymous access, a common cause of real-world data exposure.
+author: Tejakarthik Reddy Banka
+date: 2026/07/26
+references:
+  - https://attack.mitre.org/techniques/T1530/
+logsource:
+  product: azure
+  service: activitylogs
+detection:
+  selection:
+    operationName|contains:
+      - 'Microsoft.Storage/storageAccounts/blobServices/containers/write'
+      - 'SetContainerAcl'
+    properties.publicAccess:
+      - 'blob'
+      - 'container'
+  condition: selection
+fields:
+  - caller
+  - resourceId
+  - properties.publicAccess
+falsepositives:
+  - Intentional publishing of a container meant to host public static content
+level: high
+tags:
+  - attack.collection
+  - attack.t1530
