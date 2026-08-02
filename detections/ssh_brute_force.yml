@@ -24,7 +24,6 @@ fields:
 falsepositives:
   - A legitimate user repeatedly mistyping their password
   - Misconfigured automation retrying an expired credential
-level: high
 tags:
   - attack.credential_access
   - attack.t1110
